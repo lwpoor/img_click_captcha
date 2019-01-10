@@ -1,0 +1,254 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Test</title>
+    <script type="text/javascript" src="//images.zhongmin.cn/wap/js/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/vue.js"></script>
+
+
+    <style>
+        .j-captcha-sense {
+            padding: 20px;
+        }
+
+        .yidun_icon-point.yidun_point-2 {
+            background-image: url(https://cstaticdun.126.net//2.9.8/images/icon_light.f0aea65.png);
+            background-position: 0 -243px;
+            background-size: 34px 494px;
+        }
+
+        .yidun_icon-point.yidun_point-1 {
+            background-image: url(https://cstaticdun.126.net//2.9.8/images/icon_light.f0aea65.png);
+            background-position: 0 -387px;
+            background-size: 34px 494px;
+        }
+
+        .yidun_icon-point.yidun_point-3 {
+            background-image: url(https://cstaticdun.126.net//2.9.8/images/icon_light.f0aea65.png);
+            background-position: 0 -351px;
+            background-size: 34px 494px;
+        }
+
+        .yidun_icon-point.yidun_point-4 {
+            background-image: url(https://cstaticdun.126.net//2.9.8/images/icon_light.f0aea65.png);
+            background-position: 0 -315px;
+            background-size: 34px 494px;
+        }
+
+        .yidun_icon-point {
+            position: absolute;
+            width: 26px;
+            height: 33px;
+            cursor: pointer;
+            background-repeat: no-repeat;
+        }
+
+        .yidun_refresh {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            background-image: url(https://cstaticdun.126.net//2.9.8/images/icon_light.f0aea65.png);
+            background-position: 0 -460px;
+            background-size: 34px 494px;
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 100%;" class="j-captcha-sense" id="verCodeVue">
+
+        <div class="" style="width: 343px; min-width: 220px">
+            <div class="yidun_panel-placeholder" style="position: relative;">
+                <img class="yidun_bg-img" onclick="picChoice('GETMOUSEPOSINPIC', this)" style="border-radius: 2px;width:100%;" src="">
+                <img class="yidun_jigsaw">
+
+                <div v-show="point1" class="yidun_icon-point yidun_point-1" ></div>
+                <div v-show="point2" class="yidun_icon-point yidun_point-2" ></div>
+                <div v-show="point3" class="yidun_icon-point yidun_point-3" ></div>
+                <div v-show="point4" class="yidun_icon-point yidun_point-4" ></div>
+                <div class="yidun_refresh" v-on:click="refresh()" title="刷新"></div>
+            </div>
+            <div class="yidun_control" style="height: 40px; border-radius: 2px">
+                <div class="yidun_tips" style="line-height: 40px">
+                    <span class="yidun_tips__icon"></span>
+                    <span class="yidun_tips__text" v-html="tipText"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        var fadata = new Vue({
+            el: "#verCodeVue",
+            data: {
+                clickCount: 0,
+                isLoading: true,
+                point1: false,
+                point2: false,
+                point3: false,
+                point4: false,
+                piccode: {
+                    x1: 0,
+                    x2: 0,
+                    x3: 0,
+                    x4: 0,
+                    y1: 0,
+                    y2: 0,
+                    y3: 0,
+                    y4: 0,
+                },
+                tipText: ""
+            },
+            methods: {
+                refresh: function () {
+                    refresh();
+                }
+            }
+        })
+
+        function refresh() {
+            fadata.point1 = false;
+            fadata.point2 = false;
+            fadata.point3 = false;
+            fadata.point4 = false;
+            getImg()
+        }
+
+        function picChoice(pChoice) {
+            switch (pChoice) {
+                case "GETMOUSEPOSINPIC":
+                    var mPos = JPos.$getMousePos();
+                    var iPos = JPos.$getAbsPos(arguments[1]);
+
+                    console.log((mPos.x - iPos.x) + " " + (mPos.y - iPos.y));
+                    fadata.clickCount++;
+                    if (fadata.clickCount == 1) {
+                        fadata.piccode.x1 = mPos.x - iPos.x;
+                        fadata.piccode.y1 = mPos.y - iPos.y;
+                        $('.yidun_point-1').css({ "left": fadata.piccode.x1 - 12, "top": fadata.piccode.y1 - 33 })
+                        fadata.point1 = true;
+                    }
+                    if (fadata.clickCount == 2) {
+                        fadata.piccode.x2 = mPos.x - iPos.x;
+                        fadata.piccode.y2 = mPos.y - iPos.y;
+                        $('.yidun_point-2').css({ "left": fadata.piccode.x2 - 12, "top": fadata.piccode.y2 - 33 })
+                        fadata.point2 = true;
+                    }
+                    if (fadata.clickCount == 3) {
+                        fadata.piccode.x3 = mPos.x - iPos.x;
+                        fadata.piccode.y3 = mPos.y - iPos.y;
+                        $('.yidun_point-3').css({ "left": fadata.piccode.x3 - 12, "top": fadata.piccode.y3 - 33 })
+                        fadata.point3 = true;
+                    }
+                    if (fadata.clickCount == 4) {
+                        fadata.piccode.x4 = mPos.x - iPos.x;
+                        fadata.piccode.y4 = mPos.y - iPos.y;
+                        $('.yidun_point-4').css({ "left": fadata.piccode.x4 - 12, "top": fadata.piccode.y4 - 33 })
+                        fadata.point4 = true;
+
+                        $.ajax({
+                            url: "/VerCode/CheckPicCode",
+                            type: "post",
+                            dataType: "json",
+                            data: fadata.piccode,
+                            success: function (data) {
+                                fadata.clickCount = 0;
+
+                                fadata.tipText = data.ResultMsg
+
+                                if (data.Result) {
+
+                                } else {
+                                    setTimeout(function () {
+                                        refresh();
+                                    }, 1000)
+                                }
+                            }
+                        })
+                    }
+                    break;
+            }
+
+        }
+
+        $(function () {
+            getImg();
+
+        })
+
+        function getImg() {
+            $.ajax({
+                url: "/VerCode/VerCodeImg",
+                type: "get",
+                success: function (data) {
+                    fadata.isLoading = false;
+
+                    $('.yidun_bg-img').attr("src", data.Result.MainPic)
+                    var array = data.Result.content.split("");
+                    fadata.tipText = "请依次点击  <b>“" + array[0] + "”，“" + array[1] + "”，“" + array[2] + "”，“" + array[3] + "”</b>"
+
+                    setTimeout(function () {
+                        var width = $('.yidun_bg-img').width();
+                        var height = $('.yidun_bg-img').height();
+                        $.ajax({
+                            url: "/VerCode/UpdateFontPoint",
+                            type: "get",
+                            data: { height: height, width: width },
+                            success: function (data) {
+
+                            }
+                        })
+                    }, 1000)
+
+                }
+            })
+        }
+
+        var JPos = {};
+        (function ($) {
+            $.$getAbsPos = function (p) {
+                var _x = 0;
+                var _y = 0;
+                while (p.offsetParent) {
+                    _x += p.offsetLeft;
+                    _y += p.offsetTop;
+                    p = p.offsetParent;
+                }
+
+                _x += p.offsetLeft;
+                _y += p.offsetTop;
+
+                return { x: _x, y: _y };
+            };
+
+            $.$getMousePos = function (evt) {
+                var _x, _y;
+                evt = evt || window.event;
+                if (evt.pageX || evt.pageY) {
+                    _x = evt.pageX;
+                    _y = evt.pageY;
+                }
+                else if (evt.clientX || evt.clientY) {
+                    _x = evt.clientX + document.body.scrollLeft - document.body.clientLeft;
+                    _y = evt.clientY + document.body.scrollTop - document.body.clientTop;
+                }
+                else {
+                    return $.$getAbsPos(evt.target);
+                }
+                return { x: _x, y: _y };
+            }
+        })(JPos);
+
+    </script>
+</body>
+</html>
